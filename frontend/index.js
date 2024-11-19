@@ -1,3 +1,8 @@
+import {
+    MaterialReactTable,
+    useMaterialReactTable,
+  } from 'material-react-table';
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch("http://localhost:3001/data");
@@ -20,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Function to export data to CSV
         const exportToCSV = (data) => {
-            const headers = ['Rank', 'Roll Number', 'Name', 'Section', 'Total Solved', 'Easy', 'Medium', 'Hard', 'LeetCode URL'];
+            const headers = ['Pin','Rank', 'Roll Number', 'Name', 'Section', 'Total Solved', 'Easy', 'Medium', 'Hard', 'LeetCode URL'];
             const csvRows = data.map((student, index) => {
                 return [
                     index + 1,
@@ -79,6 +84,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderLeaderboard(filteredData);
         };
 
+        //pin
+        const table = useMaterialReactTable({
+            columns,
+            student,
+            enableRowPinning: true,
+            enablePagination: false,
+            enableStickyHeader: true,
+            getRowId: (student) => student.name,
+            initialState: {
+            rowPinning: {
+                top: ['rkholer33@yopmail.com', 'egarcia@yopmail.com'],
+                bottom: [],
+            },
+            },
+            muiTableContainerProps: {
+            sx: {
+                maxHeight: '400px',
+            },
+            },
+            muiTableBodyRowProps: ({ row, table }) => {
+            const { density } = table.getState();
+            return {
+                sx: {
+                  //Set a fixed height for pinned rows
+                height: row.getIsPinned()
+                    ? `${
+                        //Default mrt row height estimates. Adjust as needed.
+                        density === 'compact' ? 37 : density === 'comfortable' ? 53 : 69
+                    }px`
+                    : undefined,
+                },
+            };
+            },
+        });
+        
         // Sorting logic with ascending and descending functionality
         let totalSolvedDirection = 'desc';
         let easySolvedDirection = 'desc';
