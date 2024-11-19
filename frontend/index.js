@@ -1,8 +1,3 @@
-import {
-    MaterialReactTable,
-    useMaterialReactTable,
-  } from 'material-react-table';
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch("http://localhost:3001/data");
